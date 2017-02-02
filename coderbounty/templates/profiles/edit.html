@@ -9,7 +9,7 @@
       <section class="frame frame-light">
         <div class="frame-content">
           <h2 class="titlebar"><span class="ribbon ribbon-normal ribbon-04 ribbon-brown">{{ user.username }}'s Profile</span></h2>
-          <form method="post" action="">
+          <form method="post" action="" enctype="multipart/form-data">
             <table class="table-list">
             {% csrf_token %}
               <tbody>

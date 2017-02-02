@@ -186,6 +186,12 @@ class Bounty(models.Model):
         super(Bounty, self).save(*args, **kwargs)
 
 
+def user_images_path(instance, filename):
+    from django.template.defaultfilters import slugify
+    filename, ext = os.path.splitext(filename)
+    return 'user_{0}/{1}{2}'.format(instance.user.id, slugify(filename), ext)
+
+
 class UserProfile(models.Model):
     CHOICE_PAYMANT_SERVICE = (
         ('paypal', u'Paypal'),
@@ -195,8 +201,11 @@ class UserProfile(models.Model):
     balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     payment_service = models.CharField(max_length=255, null=True, blank=True, choices=CHOICE_PAYMANT_SERVICE)
     payment_service_email = models.EmailField(max_length=255, null=True, blank=True, default='')
+    profile_image = models.ImageField("Profile Image", upload_to=user_images_path, blank=True, null=True)
 
     def avatar(self, size=36):
+        if self.profile_image:
+            return self.profile_image.url
         for account in self.user.socialaccount_set.all():
             if 'avatar_url' in account.extra_data:
                 return account.extra_data['avatar_url']
@@ -221,6 +230,12 @@ class UserProfile(models.Model):
 
     def bounties_placed(self):
         return Bounty.objects.filter(user=self.user).aggregate(Sum('price'))['price__sum'] or 0
+
+    def delete(self, *args, **kwargs):
+        if os.path.isfile(self.profile_image.path):
+            os.remove(self.profile_image.path)
+
+        super(UserProfile, self).delete(*args, **kwargs)
 
     def __unicode__(self):
         return self.user.email

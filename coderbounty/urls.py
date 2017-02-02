@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
@@ -16,7 +17,7 @@ favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 admin.autodiscover()
 
 
-urlpatterns = (
+urlpatterns = [
     url(r'^$', website.views.home, name='home'),
     url(r'^about/$',  TemplateView.as_view(template_name='about.html'), name='about'),
     url(r'^accounts/', include('allauth.urls')),
@@ -36,7 +37,7 @@ urlpatterns = (
     url(r'^terms/$', TemplateView.as_view(template_name='terms.html'), name='terms'),
     url(r'^pay/(?P<pk>\d+)/$', login_required(PayView.as_view()), name='pay'),
     url(r'^favicon\.ico$', favicon_view),
-)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

@@ -5,3 +5,5 @@ db.sqlite3
 coderbounty.db
 /staticfiles
 .env
+.idea/
+#coderbounty/media/*

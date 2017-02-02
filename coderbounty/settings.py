@@ -181,6 +181,9 @@ PAYPAL_SANDBOX_PASSWORD = os.environ.get('PAYPAL_SANDBOX_PASSWORD', 'PAYPAL_SAND
 STATIC_ROOT = 'staticfiles'
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )

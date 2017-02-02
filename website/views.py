@@ -276,6 +276,7 @@ class UserProfileEditView(SuccessMessageMixin, UpdateView):
         user.first_name = form.cleaned_data.get("first_name")
         user.last_name = form.cleaned_data.get("last_name")
         user.email = form.cleaned_data.get("email")
+        user.userprofile.profile_image = form.cleaned_data["profile_image"]
         user.save()
 
         return super(UserProfileEditView, self).form_valid(form)
